@@ -5,7 +5,9 @@
 // You can't open the index.html file using a file:// URL.
 
 import { countUsers } from "./common.mjs";
+import { getListenEvents, getSong } from "./data.mjs";
 
 window.onload = function () {
+  console.log(getListenEvents(1));
   document.querySelector("body").innerText = `There are ${countUsers()} users`;
 };

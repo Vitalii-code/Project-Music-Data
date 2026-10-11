@@ -6,5 +6,22 @@
     <link rel="stylesheet" src="text/css" href="css/style.css" />
     <script type="module" src="js/script.mjs"></script>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <h1>Welcome to your music report!</h1>
+      <div style="display: flex gap: 10px">
+        <form id="loginForm">
+          <label for="userSelector">Showing data for user number:</label>
+          <select required id="userSelector">
+            <option value="" disabled selected>Please select a user</option>
+          </select>
+          <button id="loginButton" type="submit">Log in</button>
+        </form>
+      </div>
+
+      <div id="dataDisplay">
+        <p>No data to display</p>
+      </div>
+    </main>
+  </body>
 </html>

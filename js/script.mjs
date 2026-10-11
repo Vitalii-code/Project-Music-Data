@@ -4,10 +4,28 @@
 // Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
 // You can't open the index.html file using a file:// URL.
 
-import { countUsers } from "./common.mjs";
-import { getListenEvents, getSong } from "./data.mjs";
+import { getListenEvents, getSong, getUserIDs } from "./data.mjs";
+import { populateSelector } from "./common.mjs";
 
-window.onload = function () {
-  console.log(getListenEvents(1));
-  document.querySelector("body").innerText = `There are ${countUsers()} users`;
-};
+function resetDisplay(display) { }
+
+function loadUserData(userID, dataDisplay) { }
+
+function main() {
+  const userSelector = document.getElementById("userSelector");
+  const loginForm = document.getElementById("loginForm");
+  const dataDisplay = document.getElementById("dataDisplay");
+
+  populateSelector(userSelector, getUserIDs());
+
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const currentUserID = userSelector.value;
+
+    resetDisplay(dataDisplay);
+    loadUserData(currentUserID, dataDisplay);
+  });
+}
+
+main();

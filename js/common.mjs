@@ -7,9 +7,9 @@ export function populateSelector(selector, data) {
     throw new TypeError("populateSelector: data must be an array");
   }
 
-  data.map((element, i) => {
+  data.map((element) => {
     let opt = document.createElement("option");
-    opt.value = i; // the index
+    opt.value = element;
     opt.innerHTML = element;
     selector.append(opt);
   });

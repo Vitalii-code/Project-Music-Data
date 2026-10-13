@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Test and coverage output
+coverage/
+
+# Build output (only if you have a build step)
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp

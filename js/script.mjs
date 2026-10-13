@@ -6,10 +6,20 @@
 
 import { getListenEvents, getSong, getUserIDs } from "./data.mjs";
 import { populateSelector } from "./common.mjs";
+import { findMostListenedArtist, findMostListenedSong } from "./processing.js";
 
-function resetDisplay(display) { }
+const NO_DATA_MESSAGE = "No data to display";
 
-function loadUserData(userID, dataDisplay) { }
+function resetDisplay(display) {
+  display.innerHTML = `<p>${NO_DATA_MESSAGE}</p>`;
+}
+
+function loadUserData(userID, display) {
+  const listenEvents = getListenEvents(userID);
+
+  console.log(findMostListenedSong(listenEvents));
+  findMostListenedArtist(listenEvents);
+}
 
 function main() {
   const userSelector = document.getElementById("userSelector");

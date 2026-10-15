@@ -4,8 +4,6 @@
 // Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
 // You can't open the index.html file using a file:// URL.
 
-// TODO! make pressing enter submit the form
-
 import { getListenEvents, getSong, getUserIDs } from "./data.mjs";
 import { populateSelector, Song } from "./common.mjs";
 import {
@@ -120,6 +118,13 @@ function main() {
     const currentUserID = userSelector.value;
 
     loadUserData(currentUserID, dataDisplay);
+  });
+
+  userSelector.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && userSelector.value) {
+      event.preventDefault();
+      loginForm.requestSubmit();
+    }
   });
 }
 

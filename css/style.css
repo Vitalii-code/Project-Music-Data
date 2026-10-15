@@ -64,6 +64,17 @@ label {
   color: var(--muted);
 }
 
+.input-controls,
+#loginForm {
+  width: 100%;
+}
+
+#loginForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 select,
 button {
   border: 1px solid var(--border);
@@ -73,6 +84,7 @@ button {
 }
 
 select {
+  flex: 1;
   background-color: var(--panel);
   color: var(--text);
 }

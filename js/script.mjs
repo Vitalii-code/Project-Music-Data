@@ -10,6 +10,8 @@ import {
   findMostListened,
   findMostListenedBySeconds,
   findMostConsecutiveListened,
+  findSongsListenedEveryDay,
+  findTopListened,
   onlyFridays,
 } from "./processing.js";
 
@@ -36,6 +38,20 @@ function displaySongResult(result, songID) {
 
   const song = new Song(songID);
   insertSongData(result, song.title, song.artist);
+}
+
+function displaySongList(section, list, getLabel) {
+  if (list.length === 0) {
+    section.hidden = true;
+    return;
+  }
+
+  const result = section.querySelector("[data-result]");
+  for (const value of list) {
+    const item = document.createElement("li");
+    item.innerText = getLabel(value);
+    result.append(item);
+  }
 }
 
 function loadUserData(userID, display) {
@@ -102,6 +118,21 @@ function loadUserData(userID, display) {
   displaySongResult(
     display.querySelector('[data-result="most-consecutive-listened"]'),
     findMostConsecutiveListened(listenEvents)[0],
+  );
+
+  displaySongList(
+    display.querySelector('[data-section="every-day-songs"]'),
+    findSongsListenedEveryDay(listenEvents),
+    (songID) => {
+      const song = new Song(songID);
+      return `${song.artist} - ${song.title}`;
+    },
+  );
+
+  displaySongList(
+    display.querySelector('[data-section="top-genres"]'),
+    findTopListened(listenEvents, "genre"),
+    (genre) => genre,
   );
 }
 

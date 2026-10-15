@@ -18,6 +18,12 @@ function countOccurances(listenEvents, property) {
   return occurances;
 }
 
+function sortByOccurrences(occurances) {
+  return Object.entries(occurances)
+    .sort(([, firstCount], [, secondCount]) => secondCount - firstCount)
+    .map(([value]) => value);
+}
+
 // picks a thing that had the most occurances, be it artist or songs, returns ID and occurances
 function pickOutMost(occurances) {
   const mostListened = {
@@ -50,6 +56,42 @@ export function findMostListened(listenEvents, property = "ID") {
   }
 
   return most.ID;
+}
+
+export function findTopListened(listenEvents, property, limit = 3) {
+  if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
+    return [];
+  }
+
+  return sortByOccurrences(countOccurances(listenEvents, property)).slice(
+    0,
+    limit,
+  );
+}
+
+export function findSongsListenedEveryDay(listenEvents) {
+  if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
+    return [];
+  }
+
+  const listeningDays = new Set(
+    listenEvents.map((listenEvent) => listenEvent.timestamp.slice(0, 10)),
+  );
+  const songDays = new Map();
+
+  for (const listenEvent of listenEvents) {
+    const day = listenEvent.timestamp.slice(0, 10);
+    const songID = listenEvent.song_id;
+
+    if (!songDays.has(songID)) {
+      songDays.set(songID, new Set());
+    }
+    songDays.get(songID).add(day);
+  }
+
+  return [...songDays.entries()]
+    .filter(([, days]) => days.size === listeningDays.size)
+    .map(([songID]) => songID);
 }
 
 export function findMostListenedBySeconds(listenEvents, property = "ID") {

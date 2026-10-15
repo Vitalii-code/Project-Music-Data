@@ -1,29 +1,8 @@
 import { getSong } from "./data.mjs";
+import { Song } from "./common.mjs";
 
-class Song {
-  constructor(id, listenEvent = null) {
-    this.ID = id;
-
-    const info = getSong(id);
-    if (!info) throw new Error(`No song found with ID ${id}`);
-
-    this.artist = info.artist;
-    this.title = info.title;
-    this.durationSeconds = info["duration_seconds"];
-    this.genre = info.genre;
-
-    // Only set when created from a listen event
-    this.timestamp = listenEvent?.["timestamp"] ?? null;
-    this.secondsSinceMidnight = listenEvent?.["seconds_since_midnight"] ?? null;
-  }
-
-  // create a song class from listenEvent for easier access
-  static fromListenEvent(listenEvent) {
-    return new Song(listenEvent["song_id"], listenEvent);
-  }
-}
 // listenEvent - a list of events to parse throuhg
-// ofWhat - count occurances of what, for example count "ID" or "artist"
+// property - count occurances of what, for example count "ID" or "artist"
 function countOccurances(listenEvents, property) {
   const songOccurances = {};
   // count song occurances
@@ -59,8 +38,29 @@ function pickOutMost(occurances) {
 }
 
 // return id of the most listened thing by occurances
-export function findMostListened(listenEvents, property) {
+export function findMostListened(listenEvents, property = "ID") {
   const occurrences = countOccurances(listenEvents, property);
   const most = pickOutMost(occurrences);
   return most.ID;
+}
+
+// only return events on Friday nights (between 5pm and 4am)?
+// Any time on a Friday after 5pm
+// Any time on a Saturday before 4am
+export function onlyFridays(listenEvents) {
+  const filtered = [];
+
+  for (const i of listenEvents) {
+    const song = Song.fromListenEvent(i);
+    const songDate = new Date(song.timestamp);
+    // What was the user's most often listened to song on Friday nights (between 5pm and 4am)?
+    if (
+      (songDate.getDay() === 5 && songDate.getHours() >= 17) ||
+      (songDate.getDay() === 6 && songDate.getHours() < 4)
+    ) {
+      filtered.push(i);
+    }
+  }
+
+  return filtered;
 }

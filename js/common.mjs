@@ -1,4 +1,4 @@
-import { getUserIDs, getSong } from "./data.mjs";
+import { getSong } from "./data.mjs";
 
 export function populateSelector(selector, data) {
   if (!Array.isArray(data)) {

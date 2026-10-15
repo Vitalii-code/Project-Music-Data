@@ -20,6 +20,12 @@ main {
 #dataDisplay {
   border-radius: inherit;
   margin: inherit;
-  padding: 20px;
+}
+
+section {
   background-color: #be8585;
+  margin: inherit;
+  border-radius: inherit;
+  padding: 20px;
+  margin: inherit;
 }

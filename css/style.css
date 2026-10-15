@@ -8,6 +8,7 @@
   --text: #29233d;
   --muted: #6e6780;
   --border: #ded7ee;
+  --radius: 15px;
 }
 
 body {
@@ -20,7 +21,7 @@ main {
   max-width: 600px;
   padding: 40px 45px;
   background-color: var(--panel);
-  border-radius: 15px;
+  border-radius: var(--radius);
   margin: auto;
   margin-top: 40px;
   font-size: 16px;
@@ -28,16 +29,24 @@ main {
 }
 
 #dataDisplay {
-  border-radius: inherit;
-  margin: inherit;
+  column-count: 2;
+  column-gap: 20px;
+  margin-top: 24px;
 }
 
 section {
   background-color: var(--section);
-  margin: inherit;
-  border-radius: inherit;
+  border-radius: var(--radius);
+  break-inside: avoid;
+  margin-bottom: 20px;
   padding: 20px;
   border: 1px solid var(--border);
+}
+
+@media (max-width: 700px) {
+  #dataDisplay {
+    column-count: 1;
+  }
 }
 
 h1 {

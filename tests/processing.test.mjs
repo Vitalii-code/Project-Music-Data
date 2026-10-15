@@ -3,6 +3,8 @@ import {
   findMostConsecutiveListened,
   findMostListened,
   findMostListenedBySeconds,
+  findSongsListenedEveryDay,
+  findTopListened,
   onlyFridays,
 } from "../js/processing.js";
 
@@ -14,6 +16,25 @@ test("findMostListenedSong returns the song listened to most often", () => {
 
 test("findMostListenedArtist returns the artist listened to most often", () => {
   expect(findMostListened(userOneListenEvents, "artist")).toBe("Frank Turner");
+});
+
+test("findSongsListenedEveryDay finds songs heard on every listening day", () => {
+  expect(findSongsListenedEveryDay(getListenEvents("1"))).toEqual(["song-8"]);
+  expect(findSongsListenedEveryDay(getListenEvents("2"))).toEqual([
+    "song-4",
+    "song-9",
+  ]);
+  expect(findSongsListenedEveryDay(getListenEvents("3"))).toEqual([]);
+  expect(findSongsListenedEveryDay(getListenEvents("4"))).toEqual([]);
+});
+
+test("findTopListened returns genres ordered by listen count", () => {
+  expect(findTopListened(getListenEvents("1"), "genre")).toEqual([
+    "Pop",
+    "Folk",
+    "Punk",
+  ]);
+  expect(findTopListened(getListenEvents("2"), "genre")).toEqual(["Pop"]);
 });
 
 test("findMostListenedBySeconds returns the song listened to for the most time", () => {

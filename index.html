@@ -3,24 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <title>Music data app</title>
-    <link rel="stylesheet" src="text/css" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <script type="module" src="js/script.mjs"></script>
   </head>
   <body>
     <main>
       <h1>Welcome to your music report!</h1>
-      <div style="display: flex gap: 10px">
+      <div style="display: flex; gap: 10px">
         <form id="loginForm">
           <label for="userSelector">Showing data for user number:</label>
           <select required id="userSelector">
             <option value="" disabled selected>Please select a user</option>
           </select>
-          <button id="loginButton" type="submit">Log in</button>
+          <button id="loginButton" type="submit">Read data</button>
         </form>
       </div>
 
       <div id="dataDisplay">
-        <p>No data to display</p>
+        <section>
+          <h2>
+            What was the user's most often listened to song according to the
+            data?
+          </h2>
+          <p id="most-listened-song">No data to display</p>
+        </section>
+
+        <section>
+          <h2>
+            What was the user's most often listened to artist according to the
+            data?
+          </h2>
+          <p id="most-listened-artist">No data to display</p>
+        </section>
+
+        <section>
+          <h2>
+            What was the user's most often listened to song on Friday nights
+            (between 5pm and 4am)?
+          </h2>
+          <p id="most-listened-song-on-friday">No data to display</p>
+        </section>
       </div>
     </main>
   </body>

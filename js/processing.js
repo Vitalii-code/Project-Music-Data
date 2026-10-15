@@ -79,6 +79,41 @@ export function findMostListenedBySeconds(listenEvents) {
   return most.ID;
 }
 
+export function findMostConsecutiveListened(listenEvents) {
+  if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
+    return null;
+  }
+
+  const state = {
+    bestCount: 0,
+    bestSong: null,
+    currentSong: null,
+    currentCount: 0,
+  };
+
+  for (const listenEvent of listenEvents) {
+    const event = Song.fromListenEvent(listenEvent);
+
+    if (event.ID === state.currentSong) {
+      state.currentCount += 1;
+    } else {
+      state.currentSong = event.ID;
+      state.currentCount = 1;
+    }
+
+    if (state.currentCount > state.bestCount) {
+      state.bestCount = state.currentCount;
+      state.bestSong = state.currentSong;
+    }
+  }
+
+  if (!state.bestSong) {
+    return null;
+  }
+
+  return [state.bestSong, state.bestCount];
+}
+
 // only return events on Friday nights (between 5pm and 4am)?
 // Any time on a Friday after 5pm
 // Any time on a Saturday before 4am

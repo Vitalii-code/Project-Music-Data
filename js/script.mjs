@@ -11,6 +11,7 @@ import { populateSelector, Song } from "./common.mjs";
 import {
   findMostListened,
   findMostListenedBySeconds,
+  findMostConsecutiveListened,
   onlyFridays,
 } from "./processing.js";
 
@@ -29,6 +30,16 @@ function insertSongData(element, songTitle, artist) {
   }
 }
 
+function displaySongResult(result, songID) {
+  if (songID === null) {
+    result.closest("section").hidden = true;
+    return;
+  }
+
+  const song = new Song(songID);
+  insertSongData(result, song.title, song.artist);
+}
+
 function loadUserData(userID, display) {
   const listenEvents = getListenEvents(userID);
 
@@ -44,12 +55,9 @@ function loadUserData(userID, display) {
 
   // most listened song
   const mostListenedSongID = findMostListened(listenEvents);
-  const mostListenedSong = new Song(mostListenedSongID);
-
-  insertSongData(
+  displaySongResult(
     display.querySelector('[data-result="most-listened-song"]'),
-    mostListenedSong.title,
-    mostListenedSong.artist,
+    mostListenedSongID,
   );
 
   // most listened artist
@@ -67,19 +75,24 @@ function loadUserData(userID, display) {
   );
 
   if (filtered.length === 0) {
-    fridayResult.innerText = NO_DATA_MESSAGE;
+    fridayResult.closest("section").hidden = true;
   } else {
     const mostListenedOnFridaysID = findMostListened(filtered);
-    const mostListenedOnFridays = new Song(mostListenedOnFridaysID);
-
-    insertSongData(
+    displaySongResult(
       fridayResult,
-      mostListenedOnFridays.title,
-      mostListenedOnFridays.artist,
+      mostListenedOnFridaysID,
     );
   }
 
-  findMostListenedBySeconds(listenEvents);
+  displaySongResult(
+    display.querySelector('[data-result="most-listened-by-seconds"]'),
+    findMostListenedBySeconds(listenEvents),
+  );
+
+  displaySongResult(
+    display.querySelector('[data-result="most-consecutive-listened"]'),
+    findMostConsecutiveListened(listenEvents),
+  );
 }
 
 function main() {

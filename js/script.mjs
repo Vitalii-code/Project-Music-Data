@@ -71,17 +71,14 @@ function loadUserData(userID, display) {
   // filter out dates and certain times
   const filtered = onlyFridays(listenEvents);
   const fridayResult = display.querySelector(
-    '[data-result="most-listened-song-on-friday"]',
+    '[data-result="most-listened-song-on-friday-count"]',
   );
 
   if (filtered.length === 0) {
     fridayResult.closest("section").hidden = true;
   } else {
     const mostListenedOnFridaysID = findMostListened(filtered);
-    displaySongResult(
-      fridayResult,
-      mostListenedOnFridaysID,
-    );
+    displaySongResult(fridayResult, mostListenedOnFridaysID);
   }
 
   displaySongResult(
@@ -89,9 +86,27 @@ function loadUserData(userID, display) {
     findMostListenedBySeconds(listenEvents),
   );
 
+  insertSongData(
+    display.querySelector('[data-result="most-listened-artist-by-seconds"]'),
+    "",
+    findMostListenedBySeconds(listenEvents, "artist"),
+  );
+
+  const fridayTimeResult = display.querySelector(
+    '[data-result="most-listened-song-on-friday-by-seconds"]',
+  );
+  if (filtered.length === 0) {
+    fridayTimeResult.closest("section").hidden = true;
+  } else {
+    displaySongResult(
+      fridayTimeResult,
+      findMostListenedBySeconds(filtered),
+    );
+  }
+
   displaySongResult(
     display.querySelector('[data-result="most-consecutive-listened"]'),
-    findMostConsecutiveListened(listenEvents),
+    findMostConsecutiveListened(listenEvents)[0],
   );
 }
 

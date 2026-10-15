@@ -1,4 +1,3 @@
-import { getSong } from "./data.mjs";
 import { Song } from "./common.mjs";
 
 // listenEvent - a list of events to parse throuhg
@@ -53,7 +52,7 @@ export function findMostListened(listenEvents, property = "ID") {
   return most.ID;
 }
 
-export function findMostListenedBySeconds(listenEvents) {
+export function findMostListenedBySeconds(listenEvents, property = "ID") {
   if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
     return null;
   }
@@ -62,11 +61,12 @@ export function findMostListenedBySeconds(listenEvents) {
 
   for (const listenEvent of listenEvents) {
     const event = Song.fromListenEvent(listenEvent);
+    const value = event[property];
 
-    if (Object.hasOwn(timeListened, event["ID"])) {
-      timeListened[event["ID"]] += event.durationSeconds;
+    if (Object.hasOwn(timeListened, value)) {
+      timeListened[value] += event.durationSeconds;
     } else {
-      timeListened[event["ID"]] = event.durationSeconds;
+      timeListened[value] = event.durationSeconds;
     }
   }
 

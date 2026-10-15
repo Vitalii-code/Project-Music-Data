@@ -20,6 +20,18 @@ test("findMostListenedBySeconds returns the song listened to for the most time",
   expect(findMostListenedBySeconds(userOneListenEvents)).toBe("song-7");
 });
 
+test("findMostListenedBySeconds can find the artist listened to for the most time", () => {
+  expect(findMostListenedBySeconds(userOneListenEvents, "artist")).toBe(
+    "Frank Turner",
+  );
+});
+
+test("findMostListenedBySeconds can find the Friday song listened to for the most time", () => {
+  expect(findMostListenedBySeconds(onlyFridays(userOneListenEvents))).toBe(
+    "song-8",
+  );
+});
+
 test("findMostListenedBySeconds adds listening time for repeated songs", () => {
   const listenEvents = [
     { song_id: "song-7" },

@@ -1,5 +1,6 @@
 import { getListenEvents } from "../js/data.mjs";
 import {
+  findMostConsecutiveListened,
   findMostListened,
   findMostListenedBySeconds,
   onlyFridays,
@@ -51,10 +52,8 @@ test("onlyFridays excludes events outside the Friday night window", () => {
   expect(fridayNightEvents).not.toContain(userOneListenEvents[669]);
 });
 
-// Shell Calculate longest consecutive song runs 16 lines…
-// python - <<'PY' import json,re from pathlib import Path s=Path('/home/vit…
-//
-// • User 1:  song-1 , listened to 34 times consecutively
-// • User 2:  song-5 , listened to 44 times consecutively
-// • User 3:  song-9 , listened to 42 times consecutively
-// • User 4: No listening records
+test("findMostConsecutiveListened finds the longest period of consecutive songs", () => {
+  const consecutiveSong = findMostConsecutiveListened(userOneListenEvents);
+
+  expect(consecutiveSong).toEqual(["song-1", 34]);
+});

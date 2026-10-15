@@ -19,13 +19,15 @@
         </form>
       </div>
 
-      <div id="dataDisplay">
+      <div id="dataDisplay"></div>
+
+      <template id="reportTemplate">
         <section>
           <h2>
             What was the user's most often listened to song according to the
             data?
           </h2>
-          <p id="most-listened-song">No data to display</p>
+          <p data-result="most-listened-song">No data to display</p>
         </section>
 
         <section>
@@ -33,7 +35,7 @@
             What was the user's most often listened to artist according to the
             data?
           </h2>
-          <p id="most-listened-artist">No data to display</p>
+          <p data-result="most-listened-artist">No data to display</p>
         </section>
 
         <section>
@@ -41,9 +43,9 @@
             What was the user's most often listened to song on Friday nights
             (between 5pm and 4am)?
           </h2>
-          <p id="most-listened-song-on-friday">No data to display</p>
+          <p data-result="most-listened-song-on-friday">No data to display</p>
         </section>
-      </div>
+      </template>
     </main>
   </body>
 </html>

@@ -1,5 +1,9 @@
 import { getListenEvents } from "../js/data.mjs";
-import { findMostListened, onlyFridays } from "../js/processing.js";
+import {
+  findMostListened,
+  findMostListenedBySeconds,
+  onlyFridays,
+} from "../js/processing.js";
 
 const userOneListenEvents = getListenEvents("1");
 
@@ -9,6 +13,26 @@ test("findMostListenedSong returns the song listened to most often", () => {
 
 test("findMostListenedArtist returns the artist listened to most often", () => {
   expect(findMostListened(userOneListenEvents, "artist")).toBe("Frank Turner");
+});
+
+test("findMostListenedBySeconds returns the song listened to for the most time", () => {
+  expect(findMostListenedBySeconds(userOneListenEvents)).toBe("song-7");
+});
+
+test("findMostListenedBySeconds adds listening time for repeated songs", () => {
+  const listenEvents = [
+    { song_id: "song-7" },
+    { song_id: "song-8" },
+    { song_id: "song-8" },
+    { song_id: "song-8" },
+  ];
+
+  expect(findMostListenedBySeconds(listenEvents)).toBe("song-8");
+});
+
+test("findMostListenedBySeconds returns null when there are no listen events", () => {
+  expect(findMostListenedBySeconds([])).toBeNull();
+  expect(findMostListenedBySeconds(null)).toBeNull();
 });
 
 test("onlyFridays returns the Friday night events from the available listen data", () => {
@@ -26,3 +50,11 @@ test("onlyFridays excludes events outside the Friday night window", () => {
   expect(fridayNightEvents).not.toContain(userOneListenEvents[50]);
   expect(fridayNightEvents).not.toContain(userOneListenEvents[669]);
 });
+
+// Shell Calculate longest consecutive song runs 16 lines…
+// python - <<'PY' import json,re from pathlib import Path s=Path('/home/vit…
+//
+// • User 1:  song-1 , listened to 34 times consecutively
+// • User 2:  song-5 , listened to 44 times consecutively
+// • User 3:  song-9 , listened to 42 times consecutively
+// • User 4: No listening records

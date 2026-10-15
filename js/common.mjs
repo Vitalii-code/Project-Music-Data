@@ -18,7 +18,9 @@ export class Song {
     this.ID = id;
 
     const info = getSong(id);
-    if (!info) throw new Error(`No song found with ID ${id}`);
+    if (!info) {
+      throw new Error(`No song found with ID ${id}`);
+    }
 
     this.artist = info.artist;
     this.title = info.title;

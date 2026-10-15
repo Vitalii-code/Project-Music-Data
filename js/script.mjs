@@ -8,66 +8,94 @@
 
 import { getListenEvents, getSong, getUserIDs } from "./data.mjs";
 import { populateSelector, Song } from "./common.mjs";
-import { findMostListened, onlyFridays } from "./processing.js";
+import {
+  findMostListened,
+  findMostListenedBySeconds,
+  onlyFridays,
+} from "./processing.js";
 
 const NO_DATA_MESSAGE = "No data to display";
 
-function resetDisplay(display) {
-  display.innerHTML = `<p>${NO_DATA_MESSAGE}</p>`;
-}
+function insertSongData(element, songTitle, artist) {
+  if (artist === "") {
+    element.innerText = NO_DATA_MESSAGE;
+    return;
+  }
 
-function insertSongData(selector, songTitle, artist) {
   if (songTitle !== "") {
-    document.getElementById(selector).innerText = `${songTitle} by ${artist}`;
+    element.innerText = `${songTitle} by ${artist}`;
   } else {
-    document.getElementById(selector).innerText = artist;
+    element.innerText = artist;
   }
 }
 
 function loadUserData(userID, display) {
   const listenEvents = getListenEvents(userID);
 
+  if (listenEvents.length === 0) {
+    display.replaceChildren();
+    display.innerHTML = `<p>${NO_DATA_MESSAGE}</p>`;
+    return;
+  }
+
+  const reportTemplate = document.getElementById("reportTemplate");
+  const report = reportTemplate.content.cloneNode(true);
+  display.replaceChildren(report);
+
+  // most listened song
   const mostListenedSongID = findMostListened(listenEvents);
   const mostListenedSong = new Song(mostListenedSongID);
 
   insertSongData(
-    "most-listened-song",
+    display.querySelector('[data-result="most-listened-song"]'),
     mostListenedSong.title,
     mostListenedSong.artist,
   );
 
+  // most listened artist
   const mostListenedArtist = findMostListened(listenEvents, "artist");
-  console.log(mostListenedArtist);
-
-  // const mostListenedArtist = new Song(mostListenedArtistID);
-
-  insertSongData("most-listened-artist", "", mostListenedArtist);
+  insertSongData(
+    display.querySelector('[data-result="most-listened-artist"]'),
+    "",
+    mostListenedArtist,
+  );
 
   // filter out dates and certain times
   const filtered = onlyFridays(listenEvents);
-  const mostListenedOnFridaysID = findMostListened(filtered);
-  const mostListenedOnFridays = new Song(mostListenedOnFridaysID);
-
-  insertSongData(
-    "most-listened-song-on-friday",
-    mostListenedOnFridays.title,
-    mostListenedOnFridays.artist,
+  const fridayResult = display.querySelector(
+    '[data-result="most-listened-song-on-friday"]',
   );
+
+  if (filtered.length === 0) {
+    fridayResult.innerText = NO_DATA_MESSAGE;
+  } else {
+    const mostListenedOnFridaysID = findMostListened(filtered);
+    const mostListenedOnFridays = new Song(mostListenedOnFridaysID);
+
+    insertSongData(
+      fridayResult,
+      mostListenedOnFridays.title,
+      mostListenedOnFridays.artist,
+    );
+  }
+
+  findMostListenedBySeconds(listenEvents);
 }
 
 function main() {
   const userSelector = document.getElementById("userSelector");
   const loginForm = document.getElementById("loginForm");
   const dataDisplay = document.getElementById("dataDisplay");
+  const reportTemplate = document.getElementById("reportTemplate");
 
   populateSelector(userSelector, getUserIDs());
+  dataDisplay.append(reportTemplate.content.cloneNode(true));
 
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const currentUserID = userSelector.value;
 
-    // resetDisplay(dataDisplay);
     loadUserData(currentUserID, dataDisplay);
   });
 }

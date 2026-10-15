@@ -4,19 +4,19 @@ import { Song } from "./common.mjs";
 // listenEvent - a list of events to parse throuhg
 // property - count occurances of what, for example count "ID" or "artist"
 function countOccurances(listenEvents, property) {
-  const songOccurances = {};
+  const occurances = {};
   // count song occurances
   for (const listenEvent of listenEvents) {
     const event = Song.fromListenEvent(listenEvent);
 
-    if (Object.hasOwn(songOccurances, event[property])) {
-      songOccurances[event[property]] += 1;
+    if (Object.hasOwn(occurances, event[property])) {
+      occurances[event[property]] += 1;
     } else {
-      songOccurances[event[property]] = 1;
+      occurances[event[property]] = 1;
     }
   }
 
-  return songOccurances;
+  return occurances;
 }
 
 // picks a thing that had the most occurances, be it artist or songs, returns ID and occurances
@@ -39,8 +39,43 @@ function pickOutMost(occurances) {
 
 // return id of the most listened thing by occurances
 export function findMostListened(listenEvents, property = "ID") {
+  if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
+    return null;
+  }
+
   const occurrences = countOccurances(listenEvents, property);
   const most = pickOutMost(occurrences);
+
+  if (!most) {
+    return null;
+  }
+
+  return most.ID;
+}
+
+export function findMostListenedBySeconds(listenEvents) {
+  if (!Array.isArray(listenEvents) || listenEvents.length === 0) {
+    return null;
+  }
+
+  const timeListened = {};
+
+  for (const listenEvent of listenEvents) {
+    const event = Song.fromListenEvent(listenEvent);
+
+    if (Object.hasOwn(timeListened, event["ID"])) {
+      timeListened[event["ID"]] += event.durationSeconds;
+    } else {
+      timeListened[event["ID"]] = event.durationSeconds;
+    }
+  }
+
+  const most = pickOutMost(timeListened);
+
+  if (!most) {
+    return null;
+  }
+
   return most.ID;
 }
 

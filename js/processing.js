@@ -1,6 +1,5 @@
 import { getSong } from "./data.mjs";
 
-// create a song class from listenEvent for easier access
 class Song {
   constructor(id, listenEvent = null) {
     this.ID = id;
@@ -18,64 +17,50 @@ class Song {
     this.secondsSinceMidnight = listenEvent?.["seconds_since_midnight"] ?? null;
   }
 
+  // create a song class from listenEvent for easier access
   static fromListenEvent(listenEvent) {
     return new Song(listenEvent["song_id"], listenEvent);
   }
 }
 // listenEvent - a list of events to parse throuhg
 // ofWhat - count occurances of what, for example count "ID" or "artist"
-function countOccurances(listenEvents, toCount) {
+function countOccurances(listenEvents, property) {
   const songOccurances = {};
   // count song occurances
   for (const listenEvent of listenEvents) {
     const event = Song.fromListenEvent(listenEvent);
 
-    if (Object.hasOwn(songOccurances, event[toCount])) {
-      songOccurances[event[toCount]] += 1;
+    if (Object.hasOwn(songOccurances, event[property])) {
+      songOccurances[event[property]] += 1;
     } else {
-      songOccurances[event[toCount]] = 1;
+      songOccurances[event[property]] = 1;
     }
   }
 
   return songOccurances;
 }
 
-// return id of the most listened song by occurances
-export function findMostListenedSong(listenEvents) {
-  const songOccurances = countOccurances(listenEvents, "ID");
-
-  const mostListenedSong = {
+// picks a thing that had the most occurances, be it artist or songs, returns ID and occurances
+function pickOutMost(occurances) {
+  const mostListened = {
     ID: 0,
     occurances: 0,
   };
 
   // pick out the most listened one
-  Object.entries(songOccurances).forEach(([songID, occurances]) => {
-    if (occurances > mostListenedSong.occurances) {
-      mostListenedSong.ID = songID;
-      mostListenedSong.occurances = occurances;
+  Object.entries(occurances).forEach(([ID, occurances]) => {
+    if (occurances > mostListened.occurances) {
+      mostListened.ID = ID;
+      mostListened.occurances = occurances;
     }
   });
 
-  return mostListenedSong.ID;
+  return mostListened;
 }
 
-// return id of the most listened artist by occurances
-export function findMostListenedArtist(listenEvents) {
-  const artistOccurances = countOccurances(listenEvents, "artist");
-
-  const mostListenedArtist = {
-    ID: 0,
-    occurances: 0,
-  };
-
-  // pick out the most listened one
-  Object.entries(artistOccurances).forEach(([songID, occurances]) => {
-    if (occurances > mostListenedArtist.occurances) {
-      mostListenedArtist.ID = songID;
-      mostListenedArtist.occurances = occurances;
-    }
-  });
-
-  return mostListenedArtist.ID;
+// return id of the most listened thing by occurances
+export function findMostListened(listenEvents, property) {
+  const occurrences = countOccurances(listenEvents, property);
+  const most = pickOutMost(occurrences);
+  return most.ID;
 }

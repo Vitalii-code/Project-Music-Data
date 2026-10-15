@@ -15,7 +15,7 @@ import {
   onlyFridays,
 } from "./processing.js";
 
-const NO_DATA_MESSAGE = "No data to display";
+const NO_DATA_MESSAGE = "This user didn't listen to any songs.";
 
 function insertSongData(element, songTitle, artist) {
   if (!artist) {
@@ -38,6 +38,17 @@ function displaySongResult(result, songID) {
 
   const song = new Song(songID);
   insertSongData(result, song.title, song.artist);
+}
+
+function displayConsecutiveResult(result, consecutiveResult) {
+  if (consecutiveResult === null) {
+    result.closest("section").hidden = true;
+    return;
+  }
+
+  const [songID, listenCount] = consecutiveResult;
+  const song = new Song(songID);
+  result.innerText = `${song.artist} - ${song.title} (${listenCount} listens)`;
 }
 
 function displaySongList(section, list, getLabel) {
@@ -115,9 +126,9 @@ function loadUserData(userID, display) {
     displaySongResult(fridayTimeResult, findMostListenedBySeconds(filtered));
   }
 
-  displaySongResult(
+  displayConsecutiveResult(
     display.querySelector('[data-result="most-consecutive-listened"]'),
-    findMostConsecutiveListened(listenEvents)[0],
+    findMostConsecutiveListened(listenEvents),
   );
 
   displaySongList(

@@ -18,8 +18,8 @@ import {
 const NO_DATA_MESSAGE = "No data to display";
 
 function insertSongData(element, songTitle, artist) {
-  if (artist === "") {
-    element.innerText = NO_DATA_MESSAGE;
+  if (!artist) {
+    element.closest("section").hidden = true;
     return;
   }
 
@@ -98,10 +98,7 @@ function loadUserData(userID, display) {
   if (filtered.length === 0) {
     fridayTimeResult.closest("section").hidden = true;
   } else {
-    displaySongResult(
-      fridayTimeResult,
-      findMostListenedBySeconds(filtered),
-    );
+    displaySongResult(fridayTimeResult, findMostListenedBySeconds(filtered));
   }
 
   displaySongResult(
@@ -114,10 +111,8 @@ function main() {
   const userSelector = document.getElementById("userSelector");
   const loginForm = document.getElementById("loginForm");
   const dataDisplay = document.getElementById("dataDisplay");
-  const reportTemplate = document.getElementById("reportTemplate");
 
   populateSelector(userSelector, getUserIDs());
-  dataDisplay.append(reportTemplate.content.cloneNode(true));
 
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();

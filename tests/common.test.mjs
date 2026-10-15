@@ -1,5 +1,10 @@
-import { countUsers } from "../js/common.mjs";
+import { Song } from "../js/common.mjs";
+import { getListenEvents } from "../js/data.mjs";
+
+const userOneListenEvents = getListenEvents("1");
 
 test("User count is correct", () => {
-  expect(countUsers()).toBe(4);
+  const mockSong = Song.fromListenEvent(userOneListenEvents[0]);
+
+  expect(mockSong.title).toBe("Tonight We Fly");
 });
